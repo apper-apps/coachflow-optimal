@@ -19,10 +19,16 @@ class ResourceService {
     return resource
   }
 
-  async getByClientId(clientId) {
+async getByClientId(clientId) {
     await new Promise(resolve => setTimeout(resolve, 250))
     // Return resources assigned to client or global resources
     return this.resources.filter(r => r.client_id === clientId || r.is_global)
+  }
+
+  async getByPortalId(portalId) {
+    await new Promise(resolve => setTimeout(resolve, 250))
+    // Return resources assigned to portal
+    return this.resources.filter(r => r.portal_id === parseInt(portalId))
   }
 
   async create(resourceData) {
@@ -58,7 +64,7 @@ class ResourceService {
     return true
   }
 
-  async assignToClient(resourceId, clientId) {
+async assignToClient(resourceId, clientId) {
     await new Promise(resolve => setTimeout(resolve, 250))
     // This would typically create a ResourceAssignment record
     // For now, we'll just increment the assignments count
@@ -67,6 +73,32 @@ class ResourceService {
       resource.assignments = (resource.assignments || 0) + 1
     }
     return true
+  }
+
+  async assignToPortal(resourceId, portalId) {
+    await new Promise(resolve => setTimeout(resolve, 250))
+    const resource = this.resources.find(r => r.Id === parseInt(resourceId))
+    if (resource) {
+      resource.portal_id = parseInt(portalId)
+      resource.assignments = (resource.assignments || 0) + 1
+    }
+    return true
+  }
+
+  async createForPortal(portalId, resourceData) {
+    await new Promise(resolve => setTimeout(resolve, 400))
+    const newResource = {
+      ...resourceData,
+      Id: Math.max(...this.resources.map(r => r.Id)) + 1,
+      portal_id: parseInt(portalId),
+      client_id: null,
+      is_global: false,
+      created_at: new Date().toISOString(),
+      version: 1,
+      assignments: 0
+    }
+    this.resources.push(newResource)
+    return newResource
   }
 }
 

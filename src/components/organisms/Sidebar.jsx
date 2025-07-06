@@ -4,9 +4,10 @@ import ApperIcon from '@/components/ApperIcon'
 import { cn } from '@/utils/cn'
 
 const Sidebar = ({ isOpen, onClose }) => {
-  const navigation = [
+const navigation = [
     { name: 'Dashboard', href: '/', icon: 'LayoutDashboard' },
     { name: 'Clients', href: '/clients', icon: 'Users' },
+    { name: 'Portals', href: '/portals', icon: 'Globe' },
     { name: 'Resources', href: '/resources', icon: 'BookOpen' },
     { name: 'Deliverables', href: '/deliverables', icon: 'Package' },
     { name: 'Templates', href: '/templates', icon: 'FileText' },

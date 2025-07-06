@@ -8,9 +8,9 @@ import ClientTable from '@/components/organisms/ClientTable'
 const CoachDashboard = () => {
   const [showCreateClient, setShowCreateClient] = useState(false)
 
-  const stats = [
+const stats = [
     { name: 'Total Clients', value: 12, icon: 'Users', color: 'text-blue-600', bgColor: 'bg-blue-50' },
-    { name: 'Active Workspaces', value: 8, icon: 'Monitor', color: 'text-green-600', bgColor: 'bg-green-50' },
+    { name: 'Active Portals', value: 3, icon: 'Globe', color: 'text-green-600', bgColor: 'bg-green-50' },
     { name: 'Pending Deliverables', value: 5, icon: 'Package', color: 'text-yellow-600', bgColor: 'bg-yellow-50' },
     { name: 'Resources Shared', value: 24, icon: 'BookOpen', color: 'text-purple-600', bgColor: 'bg-purple-50' }
   ]
@@ -93,11 +93,15 @@ const CoachDashboard = () => {
         </Card>
 
         <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+<h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div className="space-y-3">
             <Button variant="outline" className="w-full justify-start">
               <ApperIcon name="UserPlus" size={16} className="mr-3" />
               Invite New Client
+            </Button>
+            <Button variant="outline" className="w-full justify-start">
+              <ApperIcon name="Globe" size={16} className="mr-3" />
+              Create Portal
             </Button>
             <Button variant="outline" className="w-full justify-start">
               <ApperIcon name="Upload" size={16} className="mr-3" />

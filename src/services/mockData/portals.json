@@ -1,0 +1,29 @@
+[
+  {
+    "Id": 1,
+    "title": "Leadership Development Program",
+    "description": "Comprehensive leadership development portal for emerging leaders",
+    "owner_id": 1,
+    "is_active": true,
+    "created_at": "2024-01-01T08:00:00Z",
+    "updated_at": "2024-01-01T08:00:00Z"
+  },
+  {
+    "Id": 2,
+    "title": "Executive Coaching Hub",
+    "description": "Advanced coaching resources and tools for executives",
+    "owner_id": 1,
+    "is_active": true,
+    "created_at": "2024-01-02T09:30:00Z",
+    "updated_at": "2024-01-02T09:30:00Z"
+  },
+  {
+    "Id": 3,
+    "title": "Team Building Workshop",
+    "description": "Interactive team building activities and assessments",
+    "owner_id": 1,
+    "is_active": true,
+    "created_at": "2024-01-03T11:15:00Z",
+    "updated_at": "2024-01-03T11:15:00Z"
+  }
+]

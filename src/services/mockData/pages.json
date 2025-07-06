@@ -2,64 +2,91 @@
   {
     "Id": 1,
     "client_id": 1,
+    "portal_id": null,
     "title": "Welcome & Getting Started",
     "sort_order": 0,
     "is_visible": true,
     "created_at": "2024-01-01T08:00:00Z",
     "block_count": 4
   },
-  {
+{
     "Id": 2,
     "client_id": 1,
+    "portal_id": null,
     "title": "Goal Setting Workshop",
     "sort_order": 1,
     "is_visible": true,
     "created_at": "2024-01-01T08:30:00Z",
     "block_count": 6
   },
-  {
+{
     "Id": 3,
     "client_id": 1,
+    "portal_id": null,
     "title": "Resources & Tools",
     "sort_order": 2,
     "is_visible": true,
     "created_at": "2024-01-01T09:00:00Z",
     "block_count": 3
   },
-  {
+{
     "Id": 4,
     "client_id": 2,
+    "portal_id": null,
     "title": "Leadership Development",
     "sort_order": 0,
     "is_visible": true,
     "created_at": "2023-12-15T09:00:00Z",
     "block_count": 5
   },
-  {
+{
     "Id": 5,
     "client_id": 2,
+    "portal_id": null,
     "title": "Communication Skills",
     "sort_order": 1,
     "is_visible": true,
     "created_at": "2023-12-15T09:30:00Z",
     "block_count": 4
   },
-  {
+{
     "Id": 6,
     "client_id": 3,
+    "portal_id": null,
     "title": "Time Management Mastery",
     "sort_order": 0,
     "is_visible": true,
     "created_at": "2023-11-20T11:30:00Z",
     "block_count": 7
   },
-  {
+{
     "Id": 7,
     "client_id": 3,
+    "portal_id": null,
     "title": "Weekly Check-ins",
     "sort_order": 1,
     "is_visible": true,
     "created_at": "2023-11-20T12:00:00Z",
     "block_count": 2
+  },
+  {
+    "Id": 8,
+    "client_id": null,
+    "portal_id": 1,
+    "title": "Portal Welcome Page",
+    "sort_order": 0,
+    "is_visible": true,
+    "created_at": "2024-01-01T08:00:00Z",
+    "block_count": 5
+  },
+  {
+    "Id": 9,
+    "client_id": null,
+    "portal_id": 1,
+    "title": "Leadership Assessment",
+    "sort_order": 1,
+    "is_visible": true,
+    "created_at": "2024-01-01T08:30:00Z",
+    "block_count": 3
   }
 ]

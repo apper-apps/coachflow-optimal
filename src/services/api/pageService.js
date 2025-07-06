@@ -19,16 +19,36 @@ class PageService {
     return page
   }
 
-  async getByClientId(clientId) {
+async getByClientId(clientId) {
     await new Promise(resolve => setTimeout(resolve, 250))
-    return this.pages.filter(p => p.client_id === clientId)
+    return this.pages.filter(p => p.client_id === clientId && p.portal_id === null)
   }
 
-  async create(pageData) {
+  async getByPortalId(portalId) {
+    await new Promise(resolve => setTimeout(resolve, 250))
+    return this.pages.filter(p => p.portal_id === parseInt(portalId))
+  }
+
+async create(pageData) {
     await new Promise(resolve => setTimeout(resolve, 400))
     const newPage = {
       ...pageData,
       Id: Math.max(...this.pages.map(p => p.Id)) + 1,
+      created_at: new Date().toISOString(),
+      block_count: 0,
+      portal_id: pageData.portal_id || null
+    }
+    this.pages.push(newPage)
+    return newPage
+  }
+
+  async createForPortal(portalId, pageData) {
+    await new Promise(resolve => setTimeout(resolve, 400))
+    const newPage = {
+      ...pageData,
+      Id: Math.max(...this.pages.map(p => p.Id)) + 1,
+      portal_id: parseInt(portalId),
+      client_id: null,
       created_at: new Date().toISOString(),
       block_count: 0
     }

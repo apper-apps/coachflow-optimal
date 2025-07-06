@@ -9,9 +9,10 @@
     "status": "submitted",
     "submitted_at": "2024-01-15T14:30:00Z",
     "file_url": "https://example.com/submissions/q1-goals-sarah.pdf",
-    "comments": 0
+    "comments": 0,
+    "portal_id": null
   },
-  {
+{
     "Id": 2,
     "client_id": 1,
     "coach_id": 1,
@@ -21,9 +22,10 @@
     "status": "reviewed",
     "submitted_at": "2024-01-14T16:45:00Z",
     "file_url": "https://example.com/submissions/reflection-week2-sarah.docx",
-    "comments": 2
+    "comments": 2,
+    "portal_id": null
   },
-  {
+{
     "Id": 3,
     "client_id": 2,
     "coach_id": 1,
@@ -33,9 +35,10 @@
     "status": "needs_changes",
     "submitted_at": "2024-01-13T10:20:00Z",
     "file_url": "https://example.com/submissions/leadership-assessment-mike.pdf",
-    "comments": 3
+    "comments": 3,
+    "portal_id": null
   },
-  {
+{
     "Id": 4,
     "client_id": 2,
     "coach_id": 1,
@@ -45,9 +48,10 @@
     "status": "approved",
     "submitted_at": "2024-01-10T09:15:00Z",
     "file_url": "https://example.com/submissions/progress-report-mike.docx",
-    "comments": 1
+    "comments": 1,
+    "portal_id": null
   },
-  {
+{
     "Id": 5,
     "client_id": 3,
     "coach_id": 1,
@@ -57,9 +61,10 @@
     "status": "submitted",
     "submitted_at": "2024-01-16T11:00:00Z",
     "file_url": "https://example.com/submissions/presentation-practice-emma.mp4",
-    "comments": 0
+    "comments": 0,
+    "portal_id": null
   },
-  {
+{
     "Id": 6,
     "client_id": 3,
     "coach_id": 1,
@@ -69,9 +74,10 @@
     "status": "reviewed",
     "submitted_at": "2024-01-12T15:30:00Z",
     "file_url": "https://example.com/submissions/time-audit-emma.xlsx",
-    "comments": 4
+    "comments": 4,
+    "portal_id": null
   },
-  {
+{
     "Id": 7,
     "client_id": 4,
     "coach_id": 1,
@@ -81,9 +87,10 @@
     "status": "approved",
     "submitted_at": "2024-01-05T13:45:00Z",
     "file_url": "https://example.com/submissions/final-project-james.pdf",
-    "comments": 2
+    "comments": 2,
+    "portal_id": null
   },
-  {
+{
     "Id": 8,
     "client_id": 5,
     "coach_id": 1,
@@ -93,6 +100,20 @@
     "status": "submitted",
     "submitted_at": "2024-01-16T08:30:00Z",
     "file_url": "https://example.com/submissions/initial-assessment-lisa.pdf",
-    "comments": 0
+    "comments": 0,
+    "portal_id": null
+  },
+  {
+    "Id": 9,
+    "client_id": 1,
+    "coach_id": 1,
+    "client_name": "Sarah Johnson",
+    "title": "Portal Leadership Assessment",
+    "description": "Leadership assessment completed through Leadership Development Program portal.",
+    "status": "submitted",
+    "submitted_at": "2024-01-01T16:00:00Z",
+    "file_url": "https://example.com/submissions/portal-leadership-sarah.pdf",
+    "comments": 0,
+    "portal_id": 1
   }
 ]

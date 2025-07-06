@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "portal_id": 1,
+    "client_id": 1,
+    "role": "member",
+    "joined_at": "2024-01-01T08:30:00Z",
+    "is_active": true
+  },
+  {
+    "Id": 2,
+    "portal_id": 1,
+    "client_id": 2,
+    "role": "member",
+    "joined_at": "2024-01-01T09:00:00Z",
+    "is_active": true
+  },
+  {
+    "Id": 3,
+    "portal_id": 2,
+    "client_id": 3,
+    "role": "member",
+    "joined_at": "2024-01-02T10:00:00Z",
+    "is_active": true
+  },
+  {
+    "Id": 4,
+    "portal_id": 2,
+    "client_id": 4,
+    "role": "member",
+    "joined_at": "2024-01-02T10:30:00Z",
+    "is_active": true
+  },
+  {
+    "Id": 5,
+    "portal_id": 3,
+    "client_id": 5,
+    "role": "member",
+    "joined_at": "2024-01-03T11:45:00Z",
+    "is_active": true
+  }
+]

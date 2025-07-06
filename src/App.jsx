@@ -9,14 +9,18 @@ import PageBuilder from '@/components/pages/PageBuilder'
 import ClientWorkspace from '@/components/pages/ClientWorkspace'
 import Templates from '@/components/pages/Templates'
 import Settings from '@/components/pages/Settings'
+import PortalList from '@/components/pages/PortalList'
+import PortalBuilder from '@/components/pages/PortalBuilder'
 
 function App() {
   return (
     <>
-      <Routes>
+<Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<CoachDashboard />} />
           <Route path="/clients" element={<CoachDashboard />} />
+          <Route path="/portals" element={<PortalList />} />
+          <Route path="/portals/:portalId/builder" element={<PortalBuilder />} />
           <Route path="/resources" element={<ResourceLibrary />} />
           <Route path="/deliverables" element={<DeliverableManager />} />
           <Route path="/templates" element={<Templates />} />

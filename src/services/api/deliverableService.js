@@ -19,16 +19,36 @@ class DeliverableService {
     return deliverable
   }
 
-  async getByClientId(clientId) {
+async getByClientId(clientId) {
     await new Promise(resolve => setTimeout(resolve, 250))
     return this.deliverables.filter(d => d.client_id === clientId)
   }
 
-  async create(deliverableData) {
+  async getByPortalId(portalId) {
+    await new Promise(resolve => setTimeout(resolve, 250))
+    return this.deliverables.filter(d => d.portal_id === parseInt(portalId))
+  }
+
+async create(deliverableData) {
     await new Promise(resolve => setTimeout(resolve, 400))
     const newDeliverable = {
       ...deliverableData,
       Id: Math.max(...this.deliverables.map(d => d.Id)) + 1,
+      submitted_at: new Date().toISOString(),
+      status: 'submitted',
+      comments: 0,
+      portal_id: deliverableData.portal_id || null
+    }
+    this.deliverables.push(newDeliverable)
+    return newDeliverable
+  }
+
+  async createForPortal(portalId, deliverableData) {
+    await new Promise(resolve => setTimeout(resolve, 400))
+    const newDeliverable = {
+      ...deliverableData,
+      Id: Math.max(...this.deliverables.map(d => d.Id)) + 1,
+      portal_id: parseInt(portalId),
       submitted_at: new Date().toISOString(),
       status: 'submitted',
       comments: 0
