@@ -1,0 +1,65 @@
+[
+  {
+    "Id": 1,
+    "client_id": 1,
+    "title": "Welcome & Getting Started",
+    "sort_order": 0,
+    "is_visible": true,
+    "created_at": "2024-01-01T08:00:00Z",
+    "block_count": 4
+  },
+  {
+    "Id": 2,
+    "client_id": 1,
+    "title": "Goal Setting Workshop",
+    "sort_order": 1,
+    "is_visible": true,
+    "created_at": "2024-01-01T08:30:00Z",
+    "block_count": 6
+  },
+  {
+    "Id": 3,
+    "client_id": 1,
+    "title": "Resources & Tools",
+    "sort_order": 2,
+    "is_visible": true,
+    "created_at": "2024-01-01T09:00:00Z",
+    "block_count": 3
+  },
+  {
+    "Id": 4,
+    "client_id": 2,
+    "title": "Leadership Development",
+    "sort_order": 0,
+    "is_visible": true,
+    "created_at": "2023-12-15T09:00:00Z",
+    "block_count": 5
+  },
+  {
+    "Id": 5,
+    "client_id": 2,
+    "title": "Communication Skills",
+    "sort_order": 1,
+    "is_visible": true,
+    "created_at": "2023-12-15T09:30:00Z",
+    "block_count": 4
+  },
+  {
+    "Id": 6,
+    "client_id": 3,
+    "title": "Time Management Mastery",
+    "sort_order": 0,
+    "is_visible": true,
+    "created_at": "2023-11-20T11:30:00Z",
+    "block_count": 7
+  },
+  {
+    "Id": 7,
+    "client_id": 3,
+    "title": "Weekly Check-ins",
+    "sort_order": 1,
+    "is_visible": true,
+    "created_at": "2023-11-20T12:00:00Z",
+    "block_count": 2
+  }
+]
