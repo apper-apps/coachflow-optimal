@@ -4,66 +4,80 @@
     "client_id": 1,
     "portal_id": null,
     "title": "Welcome & Getting Started",
+    "slug": "welcome-getting-started",
+    "icon": "Home",
     "sort_order": 0,
     "is_visible": true,
     "created_at": "2024-01-01T08:00:00Z",
     "block_count": 4
   },
-{
+  {
     "Id": 2,
     "client_id": 1,
     "portal_id": null,
     "title": "Goal Setting Workshop",
+    "slug": "goal-setting-workshop", 
+    "icon": "Target",
     "sort_order": 1,
     "is_visible": true,
     "created_at": "2024-01-01T08:30:00Z",
     "block_count": 6
   },
-{
+  {
     "Id": 3,
     "client_id": 1,
     "portal_id": null,
     "title": "Resources & Tools",
+    "slug": "resources-tools",
+    "icon": "BookOpen",
     "sort_order": 2,
     "is_visible": true,
     "created_at": "2024-01-01T09:00:00Z",
     "block_count": 3
   },
-{
+  {
     "Id": 4,
     "client_id": 2,
     "portal_id": null,
     "title": "Leadership Development",
+    "slug": "leadership-development",
+    "icon": "Crown",
     "sort_order": 0,
     "is_visible": true,
     "created_at": "2023-12-15T09:00:00Z",
     "block_count": 5
   },
-{
+  {
     "Id": 5,
     "client_id": 2,
     "portal_id": null,
     "title": "Communication Skills",
+    "slug": "communication-skills",
+    "icon": "MessageCircle",
     "sort_order": 1,
     "is_visible": true,
     "created_at": "2023-12-15T09:30:00Z",
     "block_count": 4
   },
-{
+  {
     "Id": 6,
     "client_id": 3,
     "portal_id": null,
     "title": "Time Management Mastery",
+    "slug": "time-management-mastery",
+    "icon": "Clock",
     "sort_order": 0,
     "is_visible": true,
     "created_at": "2023-11-20T11:30:00Z",
     "block_count": 7
   },
-{
+  {
     "Id": 7,
     "client_id": 3,
     "portal_id": null,
     "title": "Weekly Check-ins",
+    "slug": "weekly-check-ins",
+    "icon": "Calendar",
     "sort_order": 1,
     "is_visible": true,
     "created_at": "2023-11-20T12:00:00Z",
@@ -73,8 +87,10 @@
     "Id": 8,
     "client_id": null,
     "portal_id": 1,
-    "title": "Portal Welcome Page",
-    "sort_order": 0,
+    "title": "Welcome",
+    "slug": "welcome",
+    "icon": "Home",
+    "sort_order": 1,
     "is_visible": true,
     "created_at": "2024-01-01T08:00:00Z",
     "block_count": 5
@@ -83,10 +99,36 @@
     "Id": 9,
     "client_id": null,
     "portal_id": 1,
-    "title": "Leadership Assessment",
-    "sort_order": 1,
+    "title": "Get Started",
+    "slug": "get-started",
+    "icon": "Play",
+    "sort_order": 2,
     "is_visible": true,
     "created_at": "2024-01-01T08:30:00Z",
     "block_count": 3
+  },
+  {
+    "Id": 10,
+    "client_id": null,
+    "portal_id": 1,
+    "title": "Inbox",
+    "slug": "inbox",
+    "icon": "Inbox",
+    "sort_order": 3,
+    "is_visible": true,
+    "created_at": "2024-01-01T09:00:00Z",
+    "block_count": 2
+  },
+  {
+    "Id": 11,
+    "client_id": null,
+    "portal_id": 1,
+    "title": "Your Deliverables",
+    "slug": "your-deliverables",
+    "icon": "Package",
+    "sort_order": 4,
+    "is_visible": true,
+    "created_at": "2024-01-01T09:30:00Z",
+    "block_count": 1
   }
 ]

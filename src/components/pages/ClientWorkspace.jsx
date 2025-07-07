@@ -40,11 +40,13 @@ const ClientWorkspace = () => {
     }
   }
 
-  const createPage = async (title) => {
+const createPage = async (title) => {
     try {
       const newPage = await pageService.create({
         client_id: parseInt(clientId),
         title,
+        slug: pageService.generateSlug(title),
+        icon: 'FileText',
         is_visible: true,
         sort_order: pages.length
       })

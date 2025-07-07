@@ -77,10 +77,10 @@ const PortalBuilder = () => {
   if (loading) return <Loading />
   if (error) return <Error message={error} onRetry={loadPortalData} />
 
-  return (
-    <div className="h-full flex flex-col">
+return (
+    <div className="h-full flex">
       {/* Portal Header */}
-      <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
+      <div className="bg-white border-b px-6 py-4 flex items-center justify-between fixed top-16 left-64 right-0 z-10">
         <div className="flex items-center">
           <Button
             variant="ghost"
@@ -109,7 +109,7 @@ const PortalBuilder = () => {
       </div>
 
       {/* Page Builder */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 pt-20">
         <PageBuilder
           mode="portal"
           portalId={parseInt(portalId)}
@@ -117,6 +117,22 @@ const PortalBuilder = () => {
           onCreatePage={handleCreatePage}
           onUpdatePage={handleUpdatePage}
           onDeletePage={handleDeletePage}
+          onReorderPages={async (pageIds) => {
+            await pageService.reorderPages(portalId, pageIds)
+            toast.success('Page order updated')
+            loadPortalData()
+          }}
+          onToggleVisibility={async (pageId) => {
+            await pageService.toggleVisibility(pageId)
+            toast.success('Page visibility updated')
+            loadPortalData()
+          }}
+          onDuplicatePage={async (pageId) => {
+            const duplicated = await pageService.duplicatePage(pageId)
+            setPortalPages(prev => [...prev, duplicated])
+            toast.success('Page duplicated')
+            return duplicated
+          }}
         />
       </div>
     </div>

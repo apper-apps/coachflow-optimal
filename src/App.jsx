@@ -21,6 +21,8 @@ function App() {
           <Route path="/clients" element={<CoachDashboard />} />
           <Route path="/portals" element={<PortalList />} />
           <Route path="/portals/:portalId/builder" element={<PortalBuilder />} />
+          <Route path="/portal/:portalSlug" element={<ClientWorkspace mode="portal" />} />
+          <Route path="/portal/:portalSlug/:pageSlug" element={<ClientWorkspace mode="portal" />} />
           <Route path="/resources" element={<ResourceLibrary />} />
           <Route path="/deliverables" element={<DeliverableManager />} />
           <Route path="/templates" element={<Templates />} />
