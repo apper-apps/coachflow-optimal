@@ -220,28 +220,28 @@ const loadBlocks = async () => {
             rows={4}
           />
         )
-      case 'link':
+case 'link':
         return (
           <div className="space-y-4">
             <FormField
-<FormField
               label="URL"
               value={block.content?.url || ''}
               onChange={(e) => updateBlock(block.Id, {
+                content: { ...block.content, url: e.target.value }
               })}
             />
             <FormField
-<FormField
               label="Title"
               value={block.content?.title || ''}
               onChange={(e) => updateBlock(block.Id, {
+                content: { ...block.content, title: e.target.value }
               })}
             />
             <FormField
-<FormField
               label="Description"
               value={block.content?.description || ''}
               onChange={(e) => updateBlock(block.Id, {
+                content: { ...block.content, description: e.target.value }
               })}
             />
           </div>
