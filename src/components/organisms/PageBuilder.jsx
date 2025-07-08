@@ -183,19 +183,19 @@ const loadBlocks = async () => {
             </div>
           </div>
         )
-      case 'checklist':
+case 'checklist':
         return (
           <div className="space-y-2">
-            {block.content.items?.map((item, index) => (
+            {block.content?.items?.map((item, index) => (
               <div key={index} className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  checked={item.completed}
+                  checked={item?.completed || false}
                   readOnly
                   className="rounded border-gray-300 text-primary focus:ring-primary"
                 />
-                <span className={item.completed ? 'line-through text-gray-500' : 'text-gray-900'}>
-                  {item.text}
+                <span className={item?.completed ? 'line-through text-gray-500' : 'text-gray-900'}>
+                  {item?.text || 'Untitled item'}
                 </span>
               </div>
             ))}
@@ -246,7 +246,123 @@ case 'link':
             />
           </div>
         )
-      // Add other block type editors as needed
+case 'embed':
+        return (
+          <div className="space-y-4">
+            <FormField
+              label="URL"
+              value={block.content?.url || ''}
+              onChange={(e) => updateBlock(block.Id, {
+                content: { ...block.content, url: e.target.value }
+              })}
+              placeholder="Enter embed URL..."
+            />
+            <FormField
+              label="Title"
+              value={block.content?.title || ''}
+              onChange={(e) => updateBlock(block.Id, {
+                content: { ...block.content, title: e.target.value }
+              })}
+              placeholder="Enter embed title..."
+            />
+          </div>
+        )
+      case 'file':
+        return (
+          <div className="space-y-4">
+            <FormField
+              label="File URL"
+              value={block.content?.url || ''}
+              onChange={(e) => updateBlock(block.Id, {
+                content: { ...block.content, url: e.target.value }
+              })}
+              placeholder="Enter file URL..."
+            />
+            <FormField
+              label="Filename"
+              value={block.content?.filename || ''}
+              onChange={(e) => updateBlock(block.Id, {
+                content: { ...block.content, filename: e.target.value }
+              })}
+              placeholder="Enter filename..."
+            />
+            <FormField
+              label="Description"
+              value={block.content?.description || ''}
+              onChange={(e) => updateBlock(block.Id, {
+                content: { ...block.content, description: e.target.value }
+              })}
+              placeholder="Enter file description..."
+            />
+          </div>
+        )
+      case 'checklist':
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-gray-700">Checklist Items</label>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  const currentItems = block.content?.items || []
+                  updateBlock(block.Id, {
+                    content: {
+                      ...block.content,
+                      items: [...currentItems, { text: '', completed: false }]
+                    }
+                  })
+                }}
+              >
+                <ApperIcon name="Plus" size={14} className="mr-1" />
+                Add Item
+              </Button>
+            </div>
+            <div className="space-y-2">
+              {(block.content?.items || []).map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={item?.completed || false}
+                    onChange={(e) => {
+                      const updatedItems = [...(block.content?.items || [])]
+                      updatedItems[index] = { ...item, completed: e.target.checked }
+                      updateBlock(block.Id, {
+                        content: { ...block.content, items: updatedItems }
+                      })
+                    }}
+                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <input
+                    type="text"
+                    value={item?.text || ''}
+                    onChange={(e) => {
+                      const updatedItems = [...(block.content?.items || [])]
+                      updatedItems[index] = { ...item, text: e.target.value }
+                      updateBlock(block.Id, {
+                        content: { ...block.content, items: updatedItems }
+                      })
+                    }}
+                    placeholder="Enter item text..."
+                    className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      const updatedItems = (block.content?.items || []).filter((_, i) => i !== index)
+                      updateBlock(block.Id, {
+                        content: { ...block.content, items: updatedItems }
+                      })
+                    }}
+                  >
+                    <ApperIcon name="Trash2" size={14} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
       default:
         return <div className="text-gray-500">Editor not implemented for this block type</div>
     }
