@@ -22,13 +22,12 @@ class PageService {
 async getByClientId(clientId) {
     await new Promise(resolve => setTimeout(resolve, 250))
     return this.pages.filter(p => p.client_id === clientId && p.portal_id === null)
-  }
+}
 
   async getByPortalId(portalId) {
     await new Promise(resolve => setTimeout(resolve, 250))
     return this.pages.filter(p => p.portal_id === parseInt(portalId))
   }
-
 async create(pageData) {
     await new Promise(resolve => setTimeout(resolve, 400))
     const newPage = {
