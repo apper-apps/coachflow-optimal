@@ -74,10 +74,10 @@ const PortalBuilder = () => {
     }
   }
 
-  if (loading) return <Loading />
+if (loading) return <Loading />
   if (error) return <Error message={error} onRetry={loadPortalData} />
 
-return (
+  return (
     <div className="h-full flex">
       {/* Portal Header */}
       <div className="bg-white border-b px-6 py-4 flex items-center justify-between fixed top-16 left-64 right-0 z-10">
