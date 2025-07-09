@@ -1,56 +1,216 @@
-import clientData from '@/services/mockData/clients.json'
+import { toast } from 'react-toastify'
 
 class ClientService {
   constructor() {
-    this.clients = [...clientData]
+    const { ApperClient } = window.ApperSDK
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    })
+    this.tableName = 'client'
   }
 
   async getAll() {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return this.clients
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "email" } },
+          { field: { Name: "status" } },
+          { field: { Name: "last_login" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "open_deliverables" } },
+          { field: { Name: "total_deliverables" } },
+          { field: { Name: "phone" } },
+          { field: { Name: "timezone" } },
+          { field: { Name: "Tags" } }
+        ],
+        orderBy: [{ fieldName: "Name", sorttype: "ASC" }]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching clients:", error)
+      toast.error("Failed to fetch clients")
+      return []
+    }
   }
 
   async getById(id) {
-    await new Promise(resolve => setTimeout(resolve, 200))
-    const client = this.clients.find(c => c.Id === id)
-    if (!client) {
-      throw new Error('Client not found')
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "email" } },
+          { field: { Name: "status" } },
+          { field: { Name: "last_login" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "open_deliverables" } },
+          { field: { Name: "total_deliverables" } },
+          { field: { Name: "phone" } },
+          { field: { Name: "timezone" } },
+          { field: { Name: "Tags" } }
+        ]
+      }
+      
+      const response = await this.apperClient.getRecordById(this.tableName, parseInt(id), params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return null
+      }
+      
+      return response.data
+    } catch (error) {
+      console.error(`Error fetching client with ID ${id}:`, error)
+      toast.error("Failed to fetch client")
+      return null
     }
-    return client
   }
 
   async create(clientData) {
-    await new Promise(resolve => setTimeout(resolve, 400))
-    const newClient = {
-      ...clientData,
-      Id: Math.max(...this.clients.map(c => c.Id)) + 1,
-      created_at: new Date().toISOString(),
-      last_login: null,
-      status: 'active'
+    try {
+      const params = {
+        records: [{
+          Name: clientData.Name,
+          email: clientData.email,
+          status: clientData.status || 'active',
+          phone: clientData.phone,
+          timezone: clientData.timezone,
+          Tags: clientData.Tags,
+          open_deliverables: clientData.open_deliverables || 0,
+          total_deliverables: clientData.total_deliverables || 0,
+          created_at: new Date().toISOString()
+        }]
+      }
+      
+      const response = await this.apperClient.createRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return null
+      }
+      
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success)
+        const failedRecords = response.results.filter(result => !result.success)
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create ${failedRecords.length} records:${JSON.stringify(failedRecords)}`)
+          failedRecords.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`)
+            })
+            if (record.message) toast.error(record.message)
+          })
+        }
+        
+        if (successfulRecords.length > 0) {
+          toast.success('Client created successfully')
+          return successfulRecords[0].data
+        }
+      }
+      
+      return null
+    } catch (error) {
+      console.error("Error creating client:", error)
+      toast.error("Failed to create client")
+      return null
     }
-    this.clients.push(newClient)
-    return newClient
   }
 
   async update(id, updates) {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    const index = this.clients.findIndex(c => c.Id === id)
-    if (index === -1) {
-      throw new Error('Client not found')
+    try {
+      const params = {
+        records: [{
+          Id: parseInt(id),
+          ...updates
+        }]
+      }
+      
+      const response = await this.apperClient.updateRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return null
+      }
+      
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success)
+        const failedUpdates = response.results.filter(result => !result.success)
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`)
+          failedUpdates.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`)
+            })
+            if (record.message) toast.error(record.message)
+          })
+        }
+        
+        if (successfulUpdates.length > 0) {
+          toast.success('Client updated successfully')
+          return successfulUpdates[0].data
+        }
+      }
+      
+      return null
+    } catch (error) {
+      console.error("Error updating client:", error)
+      toast.error("Failed to update client")
+      return null
     }
-    this.clients[index] = { ...this.clients[index], ...updates }
-    return this.clients[index]
   }
 
   async delete(id) {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    const index = this.clients.findIndex(c => c.Id === id)
-    if (index === -1) {
-      throw new Error('Client not found')
+    try {
+      const params = {
+        RecordIds: [parseInt(id)]
+      }
+      
+      const response = await this.apperClient.deleteRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return false
+      }
+      
+      if (response.results) {
+        const successfulDeletions = response.results.filter(result => result.success)
+        const failedDeletions = response.results.filter(result => !result.success)
+        
+        if (failedDeletions.length > 0) {
+          console.error(`Failed to delete ${failedDeletions.length} records:${JSON.stringify(failedDeletions)}`)
+          failedDeletions.forEach(record => {
+            if (record.message) toast.error(record.message)
+          })
+        }
+        
+        if (successfulDeletions.length > 0) {
+          toast.success('Client deleted successfully')
+          return true
+        }
+      }
+      
+      return false
+    } catch (error) {
+      console.error("Error deleting client:", error)
+      toast.error("Failed to delete client")
+      return false
     }
-    this.clients.splice(index, 1)
-    return true
   }
 }
 

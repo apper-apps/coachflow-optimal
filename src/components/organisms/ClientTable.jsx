@@ -83,12 +83,12 @@ const ClientTable = ({ onCreateClient }) => {
                   <div className="flex items-center">
                     <div className="h-10 w-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mr-4">
                       <span className="text-white font-medium text-sm">
-                        {client.name.split(' ').map(n => n[0]).join('')}
+{client.Name.split(' ').map(n => n[0]).join('')}
                       </span>
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-900">
-                        {client.name}
+                        {client.Name}
                       </div>
                       <div className="text-sm text-gray-500">
                         {client.email}

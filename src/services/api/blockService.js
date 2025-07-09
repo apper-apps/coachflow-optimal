@@ -1,72 +1,238 @@
-import blockData from '@/services/mockData/blocks.json'
+import { toast } from 'react-toastify'
 
 class BlockService {
   constructor() {
-    this.blocks = [...blockData]
+    const { ApperClient } = window.ApperSDK
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    })
+    this.tableName = 'block'
   }
 
   async getAll() {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return this.blocks
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "page_id" } },
+          { field: { Name: "type" } },
+          { field: { Name: "content" } },
+          { field: { Name: "sort_order" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "Tags" } }
+        ],
+        orderBy: [{ fieldName: "sort_order", sorttype: "ASC" }]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching blocks:", error)
+      toast.error("Failed to fetch blocks")
+      return []
+    }
   }
 
   async getById(id) {
-    await new Promise(resolve => setTimeout(resolve, 200))
-    const block = this.blocks.find(b => b.Id === id)
-    if (!block) {
-      throw new Error('Block not found')
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "page_id" } },
+          { field: { Name: "type" } },
+          { field: { Name: "content" } },
+          { field: { Name: "sort_order" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "Tags" } }
+        ]
+      }
+      
+      const response = await this.apperClient.getRecordById(this.tableName, parseInt(id), params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return null
+      }
+      
+      return response.data
+    } catch (error) {
+      console.error(`Error fetching block with ID ${id}:`, error)
+      toast.error("Failed to fetch block")
+      return null
     }
-    return block
   }
 
   async getByPageId(pageId) {
-    await new Promise(resolve => setTimeout(resolve, 250))
-    return this.blocks
-      .filter(b => b.page_id === pageId)
-      .sort((a, b) => a.sort_order - b.sort_order)
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "page_id" } },
+          { field: { Name: "type" } },
+          { field: { Name: "content" } },
+          { field: { Name: "sort_order" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "Tags" } }
+        ],
+        where: [{ FieldName: "page_id", Operator: "EqualTo", Values: [parseInt(pageId)] }],
+        orderBy: [{ fieldName: "sort_order", sorttype: "ASC" }]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching blocks by page:", error)
+      return []
+    }
   }
 
   async create(blockData) {
-    await new Promise(resolve => setTimeout(resolve, 400))
-    const newBlock = {
-      ...blockData,
-      Id: Math.max(...this.blocks.map(b => b.Id)) + 1,
-      created_at: new Date().toISOString()
+    try {
+      const params = {
+        records: [{
+          Name: blockData.Name,
+          page_id: parseInt(blockData.page_id),
+          type: blockData.type,
+          content: blockData.content,
+          sort_order: blockData.sort_order || 0,
+          created_at: blockData.created_at || new Date().toISOString(),
+          Tags: blockData.Tags
+        }]
+      }
+      
+      const response = await this.apperClient.createRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return null
+      }
+      
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success)
+        const failedRecords = response.results.filter(result => !result.success)
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create ${failedRecords.length} records:${JSON.stringify(failedRecords)}`)
+          failedRecords.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`)
+            })
+            if (record.message) toast.error(record.message)
+          })
+        }
+        
+        if (successfulRecords.length > 0) {
+          toast.success('Block created successfully')
+          return successfulRecords[0].data
+        }
+      }
+      
+      return null
+    } catch (error) {
+      console.error("Error creating block:", error)
+      toast.error("Failed to create block")
+      return null
     }
-    this.blocks.push(newBlock)
-    return newBlock
   }
 
   async update(id, updates) {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    const index = this.blocks.findIndex(b => b.Id === id)
-    if (index === -1) {
-      throw new Error('Block not found')
+    try {
+      const params = {
+        records: [{
+          Id: parseInt(id),
+          ...updates
+        }]
+      }
+      
+      const response = await this.apperClient.updateRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return null
+      }
+      
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success)
+        const failedUpdates = response.results.filter(result => !result.success)
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`)
+          failedUpdates.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`)
+            })
+            if (record.message) toast.error(record.message)
+          })
+        }
+        
+        if (successfulUpdates.length > 0) {
+          toast.success('Block updated successfully')
+          return successfulUpdates[0].data
+        }
+      }
+      
+      return null
+    } catch (error) {
+      console.error("Error updating block:", error)
+      toast.error("Failed to update block")
+      return null
     }
-    this.blocks[index] = { ...this.blocks[index], ...updates }
-    return this.blocks[index]
   }
 
   async delete(id) {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    const index = this.blocks.findIndex(b => b.Id === id)
-    if (index === -1) {
-      throw new Error('Block not found')
-    }
-    this.blocks.splice(index, 1)
-    return true
-  }
-
-  async reorderBlocks(pageId, orderedBlocks) {
-    await new Promise(resolve => setTimeout(resolve, 250))
-    // Update sort orders for all blocks in the page
-    orderedBlocks.forEach(block => {
-      const index = this.blocks.findIndex(b => b.Id === block.Id)
-      if (index !== -1) {
-        this.blocks[index].sort_order = block.sort_order
+    try {
+      const params = {
+        RecordIds: [parseInt(id)]
       }
-    })
-    return true
+      
+      const response = await this.apperClient.deleteRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return false
+      }
+      
+      if (response.results) {
+        const successfulDeletions = response.results.filter(result => result.success)
+        const failedDeletions = response.results.filter(result => !result.success)
+        
+        if (failedDeletions.length > 0) {
+          console.error(`Failed to delete ${failedDeletions.length} records:${JSON.stringify(failedDeletions)}`)
+          failedDeletions.forEach(record => {
+            if (record.message) toast.error(record.message)
+          })
+        }
+        
+        if (successfulDeletions.length > 0) {
+          toast.success('Block deleted successfully')
+          return true
+        }
+      }
+      
+      return false
+    } catch (error) {
+      console.error("Error deleting block:", error)
+      toast.error("Failed to delete block")
+      return false
+    }
   }
 }
 

@@ -1,137 +1,298 @@
-import pageData from '@/services/mockData/pages.json'
+import { toast } from 'react-toastify'
 
 class PageService {
   constructor() {
-    this.pages = [...pageData]
+    const { ApperClient } = window.ApperSDK
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    })
+    this.tableName = 'page'
   }
 
   async getAll() {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return this.pages
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "slug" } },
+          { field: { Name: "icon" } },
+          { field: { Name: "sort_order" } },
+          { field: { Name: "is_visible" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "block_count" } },
+          { field: { Name: "client_id" } },
+          { field: { Name: "portal_id" } },
+          { field: { Name: "Tags" } }
+        ],
+        orderBy: [{ fieldName: "sort_order", sorttype: "ASC" }]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching pages:", error)
+      toast.error("Failed to fetch pages")
+      return []
+    }
   }
 
   async getById(id) {
-    await new Promise(resolve => setTimeout(resolve, 200))
-    const page = this.pages.find(p => p.Id === id)
-    if (!page) {
-      throw new Error('Page not found')
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "slug" } },
+          { field: { Name: "icon" } },
+          { field: { Name: "sort_order" } },
+          { field: { Name: "is_visible" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "block_count" } },
+          { field: { Name: "client_id" } },
+          { field: { Name: "portal_id" } },
+          { field: { Name: "Tags" } }
+        ]
+      }
+      
+      const response = await this.apperClient.getRecordById(this.tableName, parseInt(id), params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return null
+      }
+      
+      return response.data
+    } catch (error) {
+      console.error(`Error fetching page with ID ${id}:`, error)
+      toast.error("Failed to fetch page")
+      return null
     }
-    return page
   }
 
-async getByClientId(clientId) {
-    await new Promise(resolve => setTimeout(resolve, 250))
-    return this.pages.filter(p => p.client_id === clientId && p.portal_id === null)
-}
+  async getByClientId(clientId) {
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "slug" } },
+          { field: { Name: "icon" } },
+          { field: { Name: "sort_order" } },
+          { field: { Name: "is_visible" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "block_count" } },
+          { field: { Name: "client_id" } },
+          { field: { Name: "portal_id" } },
+          { field: { Name: "Tags" } }
+        ],
+        whereGroups: [{
+          operator: "AND",
+          subGroups: [
+            {
+              conditions: [{ fieldName: "client_id", operator: "EqualTo", values: [parseInt(clientId)] }],
+              operator: "AND"
+            },
+            {
+              conditions: [{ fieldName: "portal_id", operator: "EqualTo", values: [null] }],
+              operator: "AND"
+            }
+          ]
+        }]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching pages by client:", error)
+      return []
+    }
+  }
 
   async getByPortalId(portalId) {
-    await new Promise(resolve => setTimeout(resolve, 250))
-    return this.pages.filter(p => p.portal_id === parseInt(portalId))
-  }
-async create(pageData) {
-    await new Promise(resolve => setTimeout(resolve, 400))
-    const newPage = {
-      ...pageData,
-      Id: Math.max(...this.pages.map(p => p.Id)) + 1,
-      created_at: new Date().toISOString(),
-      block_count: 0,
-      portal_id: pageData.portal_id || null
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "slug" } },
+          { field: { Name: "icon" } },
+          { field: { Name: "sort_order" } },
+          { field: { Name: "is_visible" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "block_count" } },
+          { field: { Name: "client_id" } },
+          { field: { Name: "portal_id" } },
+          { field: { Name: "Tags" } }
+        ],
+        where: [{ FieldName: "portal_id", Operator: "EqualTo", Values: [parseInt(portalId)] }]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching pages by portal:", error)
+      return []
     }
-    this.pages.push(newPage)
-    return newPage
   }
 
-  async createForPortal(portalId, pageData) {
-    await new Promise(resolve => setTimeout(resolve, 400))
-    const newPage = {
-      ...pageData,
-      Id: Math.max(...this.pages.map(p => p.Id)) + 1,
-      portal_id: parseInt(portalId),
-      client_id: null,
-      created_at: new Date().toISOString(),
-      block_count: 0
+  async create(pageData) {
+    try {
+      const params = {
+        records: [{
+          Name: pageData.Name,
+          title: pageData.title,
+          slug: pageData.slug,
+          icon: pageData.icon,
+          sort_order: pageData.sort_order || 0,
+          is_visible: pageData.is_visible !== undefined ? pageData.is_visible : true,
+          created_at: pageData.created_at || new Date().toISOString(),
+          block_count: pageData.block_count || 0,
+          client_id: pageData.client_id ? parseInt(pageData.client_id) : null,
+          portal_id: pageData.portal_id ? parseInt(pageData.portal_id) : null,
+          Tags: pageData.Tags
+        }]
+      }
+      
+      const response = await this.apperClient.createRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return null
+      }
+      
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success)
+        const failedRecords = response.results.filter(result => !result.success)
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create ${failedRecords.length} records:${JSON.stringify(failedRecords)}`)
+          failedRecords.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`)
+            })
+            if (record.message) toast.error(record.message)
+          })
+        }
+        
+        if (successfulRecords.length > 0) {
+          toast.success('Page created successfully')
+          return successfulRecords[0].data
+        }
+      }
+      
+      return null
+    } catch (error) {
+      console.error("Error creating page:", error)
+      toast.error("Failed to create page")
+      return null
     }
-    this.pages.push(newPage)
-    return newPage
   }
 
   async update(id, updates) {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    const index = this.pages.findIndex(p => p.Id === id)
-    if (index === -1) {
-      throw new Error('Page not found')
+    try {
+      const params = {
+        records: [{
+          Id: parseInt(id),
+          ...updates
+        }]
+      }
+      
+      const response = await this.apperClient.updateRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return null
+      }
+      
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success)
+        const failedUpdates = response.results.filter(result => !result.success)
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`)
+          failedUpdates.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`)
+            })
+            if (record.message) toast.error(record.message)
+          })
+        }
+        
+        if (successfulUpdates.length > 0) {
+          toast.success('Page updated successfully')
+          return successfulUpdates[0].data
+        }
+      }
+      
+      return null
+    } catch (error) {
+      console.error("Error updating page:", error)
+      toast.error("Failed to update page")
+      return null
     }
-    this.pages[index] = { ...this.pages[index], ...updates }
-    return this.pages[index]
   }
 
   async delete(id) {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    const index = this.pages.findIndex(p => p.Id === id)
-    if (index === -1) {
-      throw new Error('Page not found')
-    }
-this.pages.splice(index, 1)
-    return true
-  }
-
-  async createDefaultPages(portalId) {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const defaultPages = [
-      { title: 'Welcome', slug: 'welcome', icon: 'Home', sort_order: 1 },
-      { title: 'Get Started', slug: 'get-started', icon: 'Play', sort_order: 2 },
-      { title: 'Inbox', slug: 'inbox', icon: 'Inbox', sort_order: 3 },
-      { title: 'Your Deliverables', slug: 'your-deliverables', icon: 'Package', sort_order: 4 }
-    ]
-    
-    const createdPages = []
-    for (const pageData of defaultPages) {
-      const newPage = await this.createForPortal(portalId, pageData)
-      createdPages.push(newPage)
-    }
-    return createdPages
-  }
-
-  async reorderPages(portalId, pageIds) {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    pageIds.forEach((pageId, index) => {
-      const pageIndex = this.pages.findIndex(p => p.Id === pageId && p.portal_id === parseInt(portalId))
-      if (pageIndex !== -1) {
-        this.pages[pageIndex].sort_order = index
+    try {
+      const params = {
+        RecordIds: [parseInt(id)]
       }
-    })
-    return true
-  }
-
-  async toggleVisibility(id) {
-    await new Promise(resolve => setTimeout(resolve, 200))
-    const page = this.pages.find(p => p.Id === id)
-    if (!page) {
-      throw new Error('Page not found')
+      
+      const response = await this.apperClient.deleteRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return false
+      }
+      
+      if (response.results) {
+        const successfulDeletions = response.results.filter(result => result.success)
+        const failedDeletions = response.results.filter(result => !result.success)
+        
+        if (failedDeletions.length > 0) {
+          console.error(`Failed to delete ${failedDeletions.length} records:${JSON.stringify(failedDeletions)}`)
+          failedDeletions.forEach(record => {
+            if (record.message) toast.error(record.message)
+          })
+        }
+        
+        if (successfulDeletions.length > 0) {
+          toast.success('Page deleted successfully')
+          return true
+        }
+      }
+      
+      return false
+    } catch (error) {
+      console.error("Error deleting page:", error)
+      toast.error("Failed to delete page")
+      return false
     }
-    page.is_visible = !page.is_visible
-    return page
-  }
-
-  async duplicatePage(id) {
-    await new Promise(resolve => setTimeout(resolve, 400))
-    const original = this.pages.find(p => p.Id === id)
-    if (!original) {
-      throw new Error('Page not found')
-    }
-    
-    const duplicate = {
-      ...original,
-      Id: Math.max(...this.pages.map(p => p.Id)) + 1,
-      title: `${original.title} (Copy)`,
-      slug: `${original.slug}-copy`,
-      sort_order: Math.max(...this.pages.filter(p => p.portal_id === original.portal_id).map(p => p.sort_order)) + 1,
-      created_at: new Date().toISOString(),
-      block_count: 0
-    }
-    
-    this.pages.push(duplicate)
-    return duplicate
   }
 
   generateSlug(title) {

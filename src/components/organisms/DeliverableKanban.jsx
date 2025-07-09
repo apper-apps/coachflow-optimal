@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { motion } from 'framer-motion'
-import ApperIcon from '@/components/ApperIcon'
-import Button from '@/components/atoms/Button'
-import Card from '@/components/atoms/Card'
-import StatusBadge from '@/components/molecules/StatusBadge'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
-import Empty from '@/components/ui/Empty'
-import { deliverableService } from '@/services/api/deliverableService'
-import { formatDistanceToNow } from 'date-fns'
+import React, { useEffect, useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { motion } from "framer-motion";
+import { formatDistanceToNow } from "date-fns";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import StatusBadge from "@/components/molecules/StatusBadge";
+import { deliverableService } from "@/services/api/deliverableService";
 
 const DeliverableKanban = ({ onCreateDeliverable }) => {
   const [deliverables, setDeliverables] = useState([])
@@ -115,7 +115,7 @@ const DeliverableKanban = ({ onCreateDeliverable }) => {
                         >
                           <Card className="p-4 hover:shadow-card transition-all duration-200 cursor-pointer">
                             <div className="flex items-start justify-between mb-3">
-                              <h4 className="font-medium text-gray-900 text-sm">
+<h4 className="font-medium text-gray-900 text-sm">
                                 {deliverable.title}
                               </h4>
                               <StatusBadge status={deliverable.status} />
@@ -131,8 +131,7 @@ const DeliverableKanban = ({ onCreateDeliverable }) => {
                                 {deliverable.client_name}
                               </span>
                             </div>
-
-                            <p className="text-xs text-gray-500 mb-3">
+<p className="text-xs text-gray-500 mb-3">
                               Submitted {formatDistanceToNow(new Date(deliverable.submitted_at), { addSuffix: true })}
                             </p>
 
