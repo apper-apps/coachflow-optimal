@@ -1,86 +1,130 @@
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import ApperIcon from '@/components/ApperIcon'
-import Button from '@/components/atoms/Button'
-import PageBuilder from '@/components/organisms/PageBuilder'
-import { portalService } from '@/services/api/portalService'
-import { pageService } from '@/services/api/pageService'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import ApperIcon from '@/components/ApperIcon';
+import Button from '@/components/atoms/Button';
+import PageBuilder from '@/components/organisms/PageBuilder';
+import { portalService } from '@/services/api/portalService';
+import { pageService } from '@/services/api/pageService';
+import Loading from '@/components/ui/Loading';
+import Error from '@/components/ui/Error';
 
 const PortalBuilder = () => {
-  const { portalId } = useParams()
-  const navigate = useNavigate()
-  const [portal, setPortal] = useState(null)
-  const [portalPages, setPortalPages] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { portalId } = useParams();
+  const navigate = useNavigate();
+  const [portal, setPortal] = useState(null);
+  const [portalPages, setPortalPages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // By wrapping loadPortalData in useCallback, we ensure it's not recreated on every render.
+  // It will only be recreated if its dependency, `portalId`, changes.
+  const loadPortalData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const portalData = await portalService.getById(parseInt(portalId));
+      setPortal(portalData);
+
+      const pages = await pageService.getByPortalId(parseInt(portalId));
+      setPortalPages(pages);
+    } catch (err) {
+      setError(err.message);
+      toast.error('Failed to load portal data');
+    } finally {
+      setLoading(false);
+    }
+  }, [portalId]); // Dependency array is crucial here.
 
   useEffect(() => {
-    loadPortalData()
-  }, [portalId])
+    loadPortalData();
+  }, [loadPortalData]); // Now, this effect only runs when the memoized `loadPortalData` function changes.
 
-  const loadPortalData = async () => {
+  // --- Memoized Event Handlers ---
+  // All functions passed to child components should be wrapped in useCallback
+  // to prevent unnecessary re-renders and break potential effect loops.
+
+  const handleCreatePage = useCallback(async (pageData) => {
     try {
-      setLoading(true)
-      setError(null)
-      
-      const portalData = await portalService.getById(parseInt(portalId))
-      setPortal(portalData)
-      
-      const pages = await pageService.getByPortalId(parseInt(portalId))
-      setPortalPages(pages)
+      const newPage = await pageService.createForPortal(parseInt(portalId), pageData);
+      setPortalPages(prev => [...prev, newPage]);
+      toast.success('Page created successfully');
+      return newPage;
     } catch (err) {
-      setError(err.message)
-      toast.error('Failed to load portal data')
-    } finally {
-      setLoading(false)
+      toast.error('Failed to create page');
+      throw err;
     }
-  }
+  }, [portalId]);
 
-  const handleCreatePage = async (pageData) => {
+  const handleUpdatePage = useCallback(async (pageId, updates) => {
     try {
-      const newPage = await pageService.createForPortal(parseInt(portalId), pageData)
-      setPortalPages(prev => [...prev, newPage])
-      toast.success('Page created successfully')
-      return newPage
+      const updatedPage = await pageService.update(pageId, updates);
+      setPortalPages(prev => prev.map(p => p.Id === pageId ? updatedPage : p));
+      toast.success('Page updated successfully');
+      return updatedPage;
     } catch (err) {
-      toast.error('Failed to create page')
-      throw err
+      toast.error('Failed to update page');
+      throw err;
     }
-  }
+  }, []); // Empty dependency array as it doesn't depend on props or state.
 
-  const handleUpdatePage = async (pageId, updates) => {
+  const handleDeletePage = useCallback(async (pageId) => {
     try {
-      const updatedPage = await pageService.update(pageId, updates)
-      setPortalPages(prev => prev.map(p => p.Id === pageId ? updatedPage : p))
-      toast.success('Page updated successfully')
-      return updatedPage
+      await pageService.delete(pageId);
+      setPortalPages(prev => prev.filter(p => p.Id !== pageId));
+      toast.success('Page deleted successfully');
     } catch (err) {
-      toast.error('Failed to update page')
-      throw err
+      toast.error('Failed to delete page');
+      throw err;
     }
-  }
+  }, []);
 
-  const handleDeletePage = async (pageId) => {
+  const handleReorderPages = useCallback(async (pageIds) => {
     try {
-      await pageService.delete(pageId)
-      setPortalPages(prev => prev.filter(p => p.Id !== pageId))
-      toast.success('Page deleted successfully')
+      await pageService.reorderPages(portalId, pageIds);
+      toast.success('Page order updated');
+      // Instead of a full reload, you could reorder the pages in local state for a faster UI update.
+      await loadPortalData();
     } catch (err) {
-      toast.error('Failed to delete page')
-      throw err
+      toast.error('Failed to reorder pages');
     }
-  }
+  }, [portalId, loadPortalData]);
 
-if (loading) return <Loading />
-  if (error) return <Error message={error} onRetry={loadPortalData} />
+  const handleToggleVisibility = useCallback(async (pageId) => {
+    try {
+      await pageService.toggleVisibility(pageId);
+      toast.success('Page visibility updated');
+      // For a better user experience, you could update the page's visibility
+      // directly in the `portalPages` state instead of a full reload.
+      await loadPortalData();
+    } catch (err) {
+      toast.error('Failed to update page visibility');
+    }
+  }, [loadPortalData]);
+
+  const handleDuplicatePage = useCallback(async (pageId) => {
+    try {
+      const duplicated = await pageService.duplicatePage(pageId);
+      setPortalPages(prev => [...prev, duplicated]);
+      toast.success('Page duplicated');
+      return duplicated;
+    } catch (err) {
+      toast.error('Failed to duplicate page');
+      throw err;
+    }
+  }, []);
+
+
+  if (loading) return <Loading />;
+  if (error) return <Error message={error} onRetry={loadPortalData} />;
 
   return (
-    <div className="h-full flex">
+    // Switched to a flex-column layout to make it more self-contained and avoid
+    // potential layout issues with fixed positioning.
+    <div className="h-full flex flex-col bg-gray-50">
       {/* Portal Header */}
-      <div className="bg-white border-b px-6 py-4 flex items-center justify-between fixed top-16 left-64 right-0 z-10">
+      <header className="bg-white border-b px-6 py-4 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center">
           <Button
             variant="ghost"
@@ -106,10 +150,10 @@ if (loading) return <Loading />
             Manage Members
           </Button>
         </div>
-      </div>
+      </header>
 
-      {/* Page Builder */}
-      <div className="flex-1 pt-20">
+      {/* Page Builder Content */}
+      <main className="flex-1 overflow-y-auto">
         <PageBuilder
           mode="portal"
           portalId={parseInt(portalId)}
@@ -117,26 +161,13 @@ if (loading) return <Loading />
           onCreatePage={handleCreatePage}
           onUpdatePage={handleUpdatePage}
           onDeletePage={handleDeletePage}
-          onReorderPages={async (pageIds) => {
-            await pageService.reorderPages(portalId, pageIds)
-            toast.success('Page order updated')
-            loadPortalData()
-          }}
-          onToggleVisibility={async (pageId) => {
-            await pageService.toggleVisibility(pageId)
-            toast.success('Page visibility updated')
-            loadPortalData()
-          }}
-          onDuplicatePage={async (pageId) => {
-            const duplicated = await pageService.duplicatePage(pageId)
-            setPortalPages(prev => [...prev, duplicated])
-            toast.success('Page duplicated')
-            return duplicated
-          }}
+          onReorderPages={handleReorderPages}
+          onToggleVisibility={handleToggleVisibility}
+          onDuplicatePage={handleDuplicatePage}
         />
-      </div>
+      </main>
     </div>
-  )
-}
+  );
+};
 
-export default PortalBuilder
+export default PortalBuilder;
