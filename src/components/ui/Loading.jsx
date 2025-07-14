@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+import React from "react";
+
 const Loading = ({ variant = 'default' }) => {
   const renderSkeleton = () => (
     <div className="space-y-4">
@@ -20,18 +23,6 @@ const Loading = ({ variant = 'default' }) => {
         </p>
       </div>
     </div>
-  )
-}
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="p-6"
-    >
-      <div className="animate-pulse">
-        {renderSkeleton()}
-      </div>
-    </motion.div>
   )
 }
 
