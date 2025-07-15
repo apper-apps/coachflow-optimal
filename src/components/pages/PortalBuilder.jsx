@@ -47,7 +47,10 @@ const PortalBuilder = () => {
 
   const handleCreatePage = useCallback(async (pageData) => {
     try {
-      const newPage = await pageService.createForPortal(parseInt(portalId), pageData);
+      const newPage = await pageService.create({
+        ...pageData,
+        portal_id: parseInt(portalId)
+      });
       setPortalPages(prev => [...prev, newPage]);
       toast.success('Page created successfully');
       return newPage;
