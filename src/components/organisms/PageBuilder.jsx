@@ -38,10 +38,9 @@ const PageBuilder = ({
     { type: 'checklist', label: 'Checklist', icon: 'CheckSquare', draggable: true }
   ];
 
-  useEffect(() => {
+useEffect(() => {
     loadBlocks();
   }, [pageId]);
-}, [pageId]);
 
   const loadBlocks = async () => {
     if (!pageId) {
@@ -54,15 +53,13 @@ try {
       setError(null);
       const data = await blockService.getByPageId(pageId);
       setBlocks(data || []);
-    } catch (err) {
+} catch (err) {
       setError(err?.message || 'Failed to load blocks');
-setError(err?.message || 'Failed to load blocks');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDragEnd = async (result) => {
 const handleDragEnd = async (result) => {
     if (!result.destination) return;
 
@@ -78,7 +75,6 @@ sort_order: index
     setBlocks(updatedItems);
 
     try {
-      await blockService.reorderBlocks(pageId, updatedItems);
 await blockService.reorderBlocks(pageId, updatedItems);
       toast.success('Block order updated');
     } catch (error) {
@@ -97,7 +93,6 @@ content: getDefaultContent(type),
 
     try {
       const created = await blockService.create(newBlock);
-      setBlocks(prev => [...prev, created]);
 setBlocks(prev => [...prev, created]);
       setEditingBlock(created.Id);
       toast.success('Block added');
@@ -105,27 +100,23 @@ setBlocks(prev => [...prev, created]);
       console.error('Failed to add block:', error);
       toast.error('Failed to add block');
     }
-}
-  };
+};
 
   const updateBlock = async (blockId, updates) => {
     try {
       const updated = await blockService.update(blockId, updates);
-      setBlocks(prev => prev.map(block =>
-setBlocks(prev => prev.map(block => 
+setBlocks(prev => prev.map(block =>
         block.Id === blockId ? updated : block
       ));
       toast.success('Block updated');
     } catch (error) {
       console.error('Failed to update block:', error);
-      toast.error('Failed to update block');
 toast.error('Failed to update block');
     }
   };
 
   const deleteBlock = async (blockId) => {
     try {
-      await blockService.delete(blockId);
 await blockService.delete(blockId);
       setBlocks(prev => prev.filter(block => block.Id !== blockId));
       toast.success('Block deleted');
@@ -133,20 +124,17 @@ await blockService.delete(blockId);
       console.error('Failed to delete block:', error);
       toast.error('Failed to delete block');
     }
-}
-  };
+};
 
   const getDefaultContent = (type) => {
     switch (type) {
       case 'text':
-        return { text: 'Enter your text here...' };
 return { text: 'Enter your text here...' };
       case 'link':
         return { url: '', title: '', description: '' };
       case 'embed':
         return { url: '', title: '' };
       case 'file':
-        return { url: '', filename: '', description: '' };
 return { url: '', filename: '', description: '' };
       case 'checklist':
         return { items: [{ text: 'Sample item', completed: false }] };
@@ -161,7 +149,6 @@ const renderBlock = (block) => {
         return (
           <div className="prose prose-sm max-w-none">
             <p>{block.content?.text || 'No content'}</p>
-          </div>
 </div>
         );
       case 'link':
@@ -183,7 +170,6 @@ const renderBlock = (block) => {
           <div className="aspect-video bg-gray-100 rounded-lg border border-gray-200 flex items-center justify-center">
             <div className="text-center">
               <ApperIcon name="Monitor" size={32} className="text-gray-400 mb-2" />
-              <p className="text-sm text-gray-600">{block.content?.title || 'Embedded Content'}</p>
 <p className="text-sm text-gray-600">{block.content?.title || 'Embedded Content'}</p>
             </div>
           </div>
@@ -192,7 +178,6 @@ const renderBlock = (block) => {
         return (
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
             <ApperIcon name="File" size={16} className="text-gray-600" />
-            <div>
 <div>
               <p className="font-medium text-gray-900">{block.content?.filename || 'Untitled File'}</p>
               {block.content?.description && (
@@ -321,7 +306,6 @@ rows={4}
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => {
 onClick={() => {
                   const currentItems = block.content?.items || [];
                   updateBlock(block.Id, {
@@ -329,7 +313,7 @@ onClick={() => {
                       ...block.content,
                       items: [...currentItems, { text: '', completed: false }]
                     }
-                }}
+}}
               >
                 <ApperIcon name="Plus" size={14} className="mr-1" />
                 Add Item
@@ -339,52 +323,50 @@ onClick={() => {
               {(block.content?.items || []).map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <input
-                    type="checkbox"
-onChange={(e) => {
+type="checkbox"
+                    onChange={(e) => {
                       const updatedItems = [...(block.content?.items || [])];
                       updatedItems[index] = { ...item, completed: e.target.checked };
                       updateBlock(block.Id, {
                         content: { ...block.content, items: updatedItems }
                       });
-                    }}
-                    }}
+}}
                     className="rounded border-gray-300 text-primary focus:ring-primary"
                   />
                   <input
-                    type="text"
-onChange={(e) => {
+type="text"
+                    onChange={(e) => {
                       const updatedItems = [...(block.content?.items || [])];
                       updatedItems[index] = { ...item, text: e.target.value };
                       updateBlock(block.Id, {
                         content: { ...block.content, items: updatedItems }
                       });
-                    }}
-                    }}
+}}
                     placeholder="Enter item text..."
                     className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                   <Button
-                    size="sm"
-onClick={() => {
+size="sm"
+                    onClick={() => {
                       const updatedItems = (block.content?.items || []).filter((_, i) => i !== index);
                       updateBlock(block.Id, {
                         content: { ...block.content, items: updatedItems }
                       });
                     }}
-                  >
-                  >
+>
                     <ApperIcon name="Trash2" size={14} />
                   </Button>
                 </div>
-              ))}
-</div>
+))}
+            </div>
           </div>
         );
       default:
         return <div className="text-gray-500">Editor not implemented for this block type</div>;
     }
-  };
-if (loading) return <Loading variant="form" />;
+};
+
+  if (loading) return <Loading variant="form" />;
   if (error) return <Error message={error} onRetry={loadBlocks} />;
 
   return (
@@ -483,8 +465,8 @@ if (loading) return <Loading variant="form" />;
             </DragDropContext>
           </div>
         </div>
+</div>
       )}
-)}
 
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         <div className="lg:col-span-2">
@@ -615,19 +597,19 @@ if (loading) return <Loading variant="form" />;
                 <ApperIcon name="X" size={16} />
               </Button>
             </div>
-            <form
-e.preventDefault();
+<form
+              onSubmit={async (e) => {
+                e.preventDefault();
                 const formData = new FormData(e.target);
                 const title = formData.get('title');
                 const icon = formData.get('icon');
                 
                 if (title && onCreatePage) {
                   await onCreatePage({
-                  await onCreatePage({
                     title,
                     slug: title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-'),
                     icon: icon || 'FileText',
-sort_order: pages.length + 1,
+                    sort_order: pages.length + 1,
                     is_visible: true
                   });
                   setShowCreatePageModal(false);
