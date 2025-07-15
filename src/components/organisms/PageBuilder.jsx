@@ -42,7 +42,10 @@ const [loading, setLoading] = useState(true)
   }, [pageId])
 
 const loadBlocks = async () => {
-    if (!pageId) return
+    if (!pageId) {
+      setLoading(false)
+      return
+    }
     
     try {
       setLoading(true)
