@@ -4,12 +4,11 @@ import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
-import Card from "@/components/atoms/Card";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
-import Settings from "@/components/pages/Settings";
 import FormField from "@/components/molecules/FormField";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
 import { blockService } from "@/services/api/blockService";
 
 const PageBuilder = ({
@@ -464,9 +463,9 @@ size="sm"
                 )}
               </Droppable>
             </DragDropContext>
-          </div>
-        </div>
 </div>
+        </div>
+      </div>
       )}
 
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
