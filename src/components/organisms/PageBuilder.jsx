@@ -313,7 +313,8 @@ onClick={() => {
                       ...block.content,
                       items: [...currentItems, { text: '', completed: false }]
                     }
-}}
+                  });
+                }}
               >
                 <ApperIcon name="Plus" size={14} className="mr-1" />
                 Add Item
@@ -471,8 +472,9 @@ size="sm"
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         <div className="lg:col-span-2">
           <Card className="p-6">
-            <div className="flex items-center justify-between mb-6">
+<div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">
+                {mode === 'portal' && selectedPageId
                   ? pages.find(p => p.Id === selectedPageId)?.title 
                   : 'Page Content'
                 }
