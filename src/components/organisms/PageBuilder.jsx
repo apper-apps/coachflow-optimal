@@ -371,7 +371,7 @@ size="sm"
 
   return (
     <div className="flex h-full">
-      {mode === 'portal' && (
+{mode === 'portal' && (
         <div className="w-80 bg-white border-r flex flex-col">
           <div className="p-4 border-b">
             <div className="flex items-center justify-between mb-4">
@@ -465,9 +465,7 @@ size="sm"
             </DragDropContext>
 </div>
         </div>
-      </div>
       )}
-
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         <div className="lg:col-span-2">
           <Card className="p-6">
