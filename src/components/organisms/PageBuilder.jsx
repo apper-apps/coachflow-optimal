@@ -41,12 +41,12 @@ useEffect(() => {
     loadBlocks();
   }, [pageId]);
 
-  const loadBlocks = async () => {
-    if (!pageId) {
+const loadBlocks = async () => {
+    const currentPageId = mode === 'portal' ? selectedPageId : pageId;
+    if (!currentPageId) {
       setLoading(false);
       return;
     }
-    
 try {
       setLoading(true);
       setError(null);
